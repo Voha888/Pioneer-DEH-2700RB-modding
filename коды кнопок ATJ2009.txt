@@ -1,0 +1,8 @@
+FFA25D Folder+
+FF629D Folder-
+FFE01F |<<
+FFA857 >>|
+FF906F Play-pause
+FFB04F +
+FF9867 -
+FFFFFFFF повтор
