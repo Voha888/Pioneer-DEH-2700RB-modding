@@ -2,6 +2,7 @@
 #include <IRremote.h>
 #include <IRremoteInt.h>
 #include <ir_Lego_PF_BitStreamEncoder.h>
+IRsend irsend;
 
 int RECV_PIN = 38;
 
@@ -20,12 +21,11 @@ void setup() {
   irrecv.enableIRIn(); // Start the receiver
    pinMode(42, OUTPUT);
    pinMode(44, OUTPUT);
-    pinMode(40, OUTPUT); // пин отправки команд в модулятор по проводу
+    pinMode(40, OUTPUT); // пин отправки команд в ATJ2009 по проводу
     
     /*
-     коды кнопок ATJ2009
-    FFA25D Folder+
-FF629D Folder-
+коды кнопок ATJ2009
+    FF629D Folder-
 FFE01F |<<
 FFA857 >>|
 FF906F Play-pause
@@ -56,40 +56,42 @@ FFFFFFFF повтор
 void up() {
   
   digitalWrite(36, LOW); digitalWrite(28, LOW); delay(200); digitalWrite(28, HIGH); digitalWrite(36, HIGH);
-  
+  irsend.sendNEC(0xFFA25D, 24);
   }
 
 void right() {
   
   digitalWrite(28, LOW); delay(200); digitalWrite(28, HIGH);
+  irsend.sendNEC(0xFFA857, 24);
+
   
   }
 
 void down() {  
   
   digitalWrite(36, LOW); digitalWrite(30, LOW); delay(200); digitalWrite(30, HIGH); digitalWrite(36, HIGH); 
-  
+  irsend.sendNEC(0xFF629D, 24);
   }
 void left() { 
   
   digitalWrite(30, LOW); delay(200); digitalWrite(30, HIGH); 
-  
+  irsend.sendNEC(0xFFE01F, 24);
   }
   
- void play_pause() 
- 
- { 
+ void play_pause()  { 
+ irsend.sendNEC(0xFFF906F, 24);
+
   
   }
   
  void vol_up() { 
   
   digitalWrite(32, LOW); delay(200); digitalWrite(32, HIGH);
-
+irsend.sendNEC(0xFFB04F, 24);
 }
  void vol_down() { 
   digitalWrite(34, LOW); delay(200); digitalWrite(34, HIGH);
-
+irsend.sendNEC(0xFF9867, 24);
 }
 
  void usb_fm() { 
@@ -112,7 +114,7 @@ void left() {
 }
 
  void repeat_command() { 
-
+irsend.sendNEC(0xFFFFFFFF, 32);
 
 
 }
@@ -139,11 +141,11 @@ digitalWrite(44, LOW);
 delay(20);
 digitalWrite(44, HIGH);
   
- // digitalWrite(40, HIGH);   // зажигаем светодиод
- // delay(100);    
+ //digitalWrite(40, HIGH);   // зажигаем светодиод
+ //delay(2000);    
   //Serial.println(1.23456, 4); // ждем секунду
- // digitalWrite(40, LOW);    // выключаем светодиод
- // delay(100);              // ждем секунду
+ //digitalWrite(40, LOW);    // выключаем светодиод
+ //delay(2000);              // ждем секунду
  
   
   if (irrecv.decode(&results)) {
@@ -172,7 +174,7 @@ Serial.println(text);
 //delay(100);
 
 
-
+irrecv.enableIRIn();
 irrecv.resume(); // Receive the next value
 
 }
